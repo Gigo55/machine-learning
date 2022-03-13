@@ -1,0 +1,47 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+from sklearn.linear_model import LinearRegression #doğrusal
+from sklearn.preprocessing import PolynomialFeatures #polinomsal
+#veri setiniyükleyelim
+df=pd.read_csv("dataSet/polinomal.csv",sep=";")
+print(df.head())
+y=df.araba_max_hiz.values.reshape(-1,1)
+x=df.araba_fiyat.values.reshape(-1,1)
+#scatter grafiğini çizelim.
+plt.scatter(x,y)
+plt.ylabel("Araba Maksimum Hızı")
+plt.xlabel("Araba Fiyatı")
+plt.title("Araba Hız ve Fiyat İlişkisi")
+plt.grid(True)
+plt.show()
+lr=LinearRegression()
+lr.fit(x,y)
+y_tahmin=lr.predict(x)
+plt.scatter(x,y)
+plt.plot(x,y_tahmin,color="green")
+plt.ylabel("Araba Maksimum Hızı")
+plt.xlabel("Araba Fiyatı")
+plt.title("Araba Hız ve Fiyat İlişkisi")
+plt.grid(True)
+plt.show()
+araba_fiyat=10000
+print("10 milyon Tl'lik arabanın hız tahmini:",lr.predict((np.array([araba_fiyat])).reshape(1,-1)))
+#polinomsal regrasyon=y=b0+b1*x+b2*x^2+b3*x^3+.....+bn*x^n
+polinom_regresyon=PolynomialFeatures(degree=4)
+x_polinom=polinom_regresyon.fit_transform(x)
+print(x_polinom)
+#kod yazılacak kısım
+lr2=LinearRegression()
+lr2.fit(x_polinom,y)
+y_tahmin2=lr2.predict(x_polinom)
+plt.scatter(x,y)
+plt.plot(x,y_tahmin, color="green", label="Doğrusal")
+plt.plot(x,y_tahmin2, color="blue", label="Polinomsal")
+plt.legend()
+plt.ylabel("Araba Maksimum Hızı")
+plt.xlabel("Araba Fiyatı")
+plt.title("Araba Hız ve Fiyat İlişkisi")
+plt.grid(True)
+plt.show()
